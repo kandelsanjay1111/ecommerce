@@ -29,6 +29,7 @@
                             <th>Id</th>
                             <th>Product Name</th>
                             <th>Product Slug</th>
+                            <th>Product Image</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -38,6 +39,7 @@
                             <td>{{$loop->index+1}}</td>
                             <td>{{$product->name}}</td>
                             <td>{{$product->slug}}</td>
+                            <td><img src="{{asset('storage/media/'.$product->image)}}"></td>
                             <td class="text-right">
                                 <a class="{{$product->status=='active'?'btn btn-success':'btn btn-secondary'}}" href="{{route('admin.product.status',$product->id)}}">{{$product->status=='active'?'Active':'Deactive'}}</a>
                                 <a href="{{route('admin.product.update',$product->id)}}" class="btn btn-info mr-1">Edit</a>
