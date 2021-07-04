@@ -27,9 +27,10 @@ class CategoryController extends Controller
         ]);
 
         $category=new Category;
-        $category->category_name=$data['category_name'];
-        $category->category_slug=$data['category_slug'];
-        $category->save();
+        $this->save($category,$data);
+        // $category->category_name=$data['category_name'];
+        // $category->category_slug=$data['category_slug'];
+        // $category->save();
         return redirect()->route('admin.category')->with('success','Category is added successfully');
     }
 
@@ -46,10 +47,7 @@ class CategoryController extends Controller
             'category_slug'=>'required|max:255|unique:categories,category_slug,'.$id,
         ]);
         $category=Category::find($id);
-        $category->category_name=$data['category_name'];
-        $category->category_slug=$data['category_slug'];
-        $this->save($category,$data)
-        $category->save();
+        $this->save($category,$data);
         return redirect()->route('admin.category')->with('success','Category is updated successfully');
 
     }
@@ -76,6 +74,13 @@ class CategoryController extends Controller
         return redirect()
         ->route('admin.category')->
         with('success','Status is updated successfully');
+    }
+
+    public function save(Category $category,$data)
+    {
+        $category->category_name=$data['category_name'];
+        $category->category_slug=$data['category_slug'];
+        $category->save();
     }
    
 }

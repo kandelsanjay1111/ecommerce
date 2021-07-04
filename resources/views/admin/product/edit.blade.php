@@ -29,9 +29,21 @@
                     <label for="slug" class="control-label mb-1">Product slug</label>
                     <input id="slug" name="slug" type="text" class="form-control @error('slug') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{$product->slug}}">
                 </div>
-                <div class="form-group">
-                	<label for="image" class="control-label mb-1">Product image</label>
-                	<input type="file" name="image" class="form-control @error('image') is-invalid @enderror">
+                <div class="form-group row" id="product_image">
+                    <div class="col-md-12">
+                    	<label for="image" class="control-label mb-1">Product image</label>
+                        <button id="add_image" type="button" class="btn  btn-success my-2"><i class="zmdi zmdi-plus"></i> Add</button>
+                    </div>
+                    @foreach($images as $image)
+                    <div class="col-md-4">  
+                        <input type="hidden" name="image_id[]" value="{{$image->id}}">
+                    	<input type="file" name="image[]" class="form-control @error('image') is-invalid @enderror">
+                        <img class="w-100" src="{{asset('storage/media/'.$image->image)}}">
+                        <div class="text-center my-2">
+                        <button value="{{$image->id}}" type="button" class="btn btn-danger m-auto remove_image">Remove</button>
+                        </div>
+                    </div>
+                    @endforeach
                 </div>
                 <div class="form-group">
                     <label for="brand" class="control-label mb-1"> Brand</label>
@@ -66,7 +78,7 @@
                     <input id="warranty" name="warranty" type="text" class="form-control @error('warranty') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{$product->warranty}}">
                 </div>
                 <h2 class="my-4">Product Attributes</h2>
-                <button id="add_btn" type="button" class="btn btn-info">Add new</button>
+                <button id="add_btn" type="button" class="btn btn-success"><i class="zmdi zmdi-plus"></i> Add new</button>
                 <div id="product_attribute">
                     @foreach($attributes  as $attribute)
                     <div class="form-group row">
@@ -108,6 +120,7 @@
                         <div class="col-md-4">
                         <label for="attr_image" class="control-label mb-1">Attribute image</label>
                         <input type="file" name="attr_image[]" class="form-control @error('attr_image') is-invalid @enderror">
+                        <img src="{{asset('storage/media/'.$attribute->image)}}">
                         </div>
                         <div class="col-md-2">
                             <button type="button" class="btn btn-danger mt-4 remove-btn">Remove</button>
@@ -136,6 +149,7 @@
         $('#product_attribute').append(form_html);
         let last_attribute=$('#product_attribute').find('.form-group').last();
         last_attribute.find('input').val('');
+        last_attribute.find('img').attr('src','');
     });
 </script>
 
@@ -145,5 +159,35 @@
         $(this).closest('.row').remove();
     });
 });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#add_image').click(function(){
+            let image_element=$('#product_image').find('.col-md-4').html();
+            let image_html='<div class="col-md-4">'+image_element+'</div>';
+            //console.log(image_html);
+            $('#product_image').append(image_html);
+            let last_image=$('#product_image').find('.col-md-4').last();
+            last_image.find('input').val('');
+            last_image.find('img').attr('src','');
+        })
+    })
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('body').on('click','.remove_image',function(){
+            let count=$('#product_image').find('.col-md-4').length;
+            //console.log(count);
+            if(count>1)
+            {
+            $(this).parent().parent().remove();
+            }
+            else{
+                alert('you cannot delete this');
+            }
+        });
+    });
 </script>
 @endsection

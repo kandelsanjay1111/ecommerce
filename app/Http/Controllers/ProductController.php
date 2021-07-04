@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use  App\Models\Product;
 use DB;
+use Storage;
 class ProductController extends Controller
 {
     public function index()
@@ -16,8 +17,14 @@ class ProductController extends Controller
     public function create()
     {
         $categories=DB::table('categories')->where('status','active')->get();
+        $sizes=DB::table('sizes')->where('status','active')->get();
+        $colors=DB::table('colors')->where('status','active')->get();
         // dd($categories);
-        return view('admin.product.create')->with('categories',$categories);
+        return view('admin.product.create')->with([
+            'categories'=>$categories,
+            'sizes'=>$sizes,
+            'colors'=>$colors
+        ]);
     }
 
     public function store(Request $request)
@@ -32,9 +39,10 @@ class ProductController extends Controller
             'short_desc'=>'required',
             'keywords'=>'required',
             'technical_specification'=>'required',
-            'warranty'=>'required'
+            'warranty'=>'required',
+            'attr_image'=>'required'
         ]);
-
+        // dd($request->all());
         // dd($data);
         $product=new Product();
         $product->name=$data['name'];
@@ -54,6 +62,48 @@ class ProductController extends Controller
         $product->technical_specification=$data['technical_specification'];
         $product->warranty=$data['warranty'];
         $product->save();
+
+        foreach ($request->sku as $key => $value) {
+            $newData=[
+                'product_id'=>$product->id,
+                'sku'=>$value,
+                'mrp'=>$request->mrp[$key],
+                'price'=>$request->price[$key],
+                'quantity'=>$request->quantity[$key],
+                'size_id'=>$request->size_id[$key],
+                'color_id'=>$request->color_id[$key]
+            ];
+
+            if($request->hasFile('attr_image'))
+            {
+                $ext=$request->file('attr_image')[$key]->extension();
+                $image_name=$request->slug.time().'.'.$ext;
+                $request->image->storeAs('public/media',$image_name);
+                $newData['image']=$image_name;
+            }
+
+            DB::table('products_attr')->insert($newData);
+        }
+
+        //multiple image store
+
+        foreach($request->image as $key=>$image)
+        {
+            $imageData[]=[
+                'product_id'=>$product->id
+            ];
+           if(is_file($request->image[$key]))
+           {
+                $ext=$request->image[$key]->extension();
+                $image_name=$request->slug.time().'.'.$ext;
+                $request->image[$key]->storeAs('public/media',$image_name);
+                $imageData[$key]['image']=$image_name;
+           }
+        }
+
+        DB::table('product_images')->insert($imageData);
+
+
         return redirect()->route('admin.product')->with('success','Product is created successfully');
     }
 
@@ -64,12 +114,14 @@ class ProductController extends Controller
         $sizes=DB::table('sizes')->where('status','active')->get();
         $colors=DB::table('colors')->where('status','active')->get();
         $attributes=DB::table('products_attr')->where('product_id',$id)->get();
+        $images=DB::table('product_images')->where('product_id',$id)->get();
         return view('admin.product.edit')->with([
             'product'=>$product,
             'categories'=>$categories,
             'sizes'=>$sizes,
             'colors'=>$colors,
-            'attributes'=>$attributes
+            'attributes'=>$attributes,
+            'images'=>$images
         ]);
     }
 
@@ -85,22 +137,22 @@ class ProductController extends Controller
             'short_desc'=>'required',
             'keywords'=>'required',
             'technical_specification'=>'required',
-            'warranty'=>'required'
+            'warranty'=>'required',
         ]);
-        //dd($request->attribute_id);
+
         $product= Product::find($id);
         $product->name=$data['name'];
         $product->category_id=$data['category_id'];
         $product->slug=$data['slug'];
         $product->brand=$data['brand'];
 
-        if($request->hasFile('image'))
-        {
-            $ext=$request->file('image')->extension();
-            $image_name=$request->slug.time().'.'.$ext;
-            $request->image->storeAs('public/media',$image_name);
-            $product->image=$image_name;
-        }
+        // if($request->hasFile('image'))
+        // {
+        //     $ext=$request->file('image')->extension();
+        //     $image_name=$request->slug.time().'.'.$ext;
+        //     $request->image->storeAs('public/media',$image_name);
+        //     $product->image=$image_name;
+        // }
         
         $product->model=$data['model'];
         $product->short_desc=$data['short_desc'];
@@ -123,17 +175,36 @@ class ProductController extends Controller
             }
           }
 
+          //dd($request->attr_image);
+          if($request->hasFile('attr_image'))
+          {
+           $image_keys=array_keys($request->attr_image); 
+          }
+          else{
+            $image_keys=[];
+          }
+
         foreach ($request->sku as $key => $value) {
             $newData=[
                 'product_id'=>$product->id,
                 'sku'=>$value,
-                'image'=>'rest',
                 'mrp'=>$request->mrp[$key],
                 'price'=>$request->price[$key],
                 'quantity'=>$request->quantity[$key],
                 'size_id'=>$request->size_id[$key],
                 'color_id'=>$request->color_id[$key]
             ];
+
+            foreach($image_keys as $ikey)
+            {
+                if($ikey==$key){
+                    $ext=$request->attr_image[$key]->extension();
+                    $image_name=$request->slug.time().'.'.$ext;
+                    $request->attr_image[$key]->storeAs('public/media',$image_name);
+                    $newData['image']=$image_name;
+                }
+            }
+
             if($request->attribute_id[$key]=='')
             {
             DB::table('products_attr')->insert($newData);
@@ -143,6 +214,48 @@ class ProductController extends Controller
                 $attributes->update($newData);
             }
         }
+
+        //delete multiple images
+        $product_images=DB::table('product_images')->select('id')->where('product_id',$id)->get();
+          foreach ($product_images as $key => $images) {
+              $image_ids[]=$images->id;
+          }
+          $deleted_image_ids=array_diff($image_ids,$request->image_id);
+          if(count($deleted_image_ids)>0)
+          {
+            foreach($deleted_image_ids as $img_id)
+            {
+                $product_image=DB::table('product_images')->where('id',$img_id)->delete();
+            }
+          }
+
+
+          //create new entry of images
+          if($request->hasFile('image'))
+          {
+
+              foreach($request->image as $key=>$image)
+              {
+                $newImage=['product_id'=>$product->id];
+
+                $ext=$request->image[$key]->extension();
+                $image_name=$request->slug.time().'.'.$ext;
+                $request->image[$key]->storeAs('public/media',$image_name);
+                $newImage['image']=$image_name;
+
+
+                if($request->image_id[$key]=='')
+                {
+                DB::table('product_images')->insert($newImage);
+                }
+                else{
+                    $product_images=DB::table('product_images')->where('id',$request->image_id[$key]);
+                    $product_images->update($newImage);
+                }
+              }
+
+          }
+
         return redirect()->route('admin.product')->with('success','Product is updated successfully');
     }
 
@@ -154,6 +267,7 @@ class ProductController extends Controller
 
     public function status()
     {
-        
+
     }
+
 }
