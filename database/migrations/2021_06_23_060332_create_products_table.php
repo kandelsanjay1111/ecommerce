@@ -26,6 +26,10 @@ class CreateProductsTable extends Migration
             $table->longText('technical_specification');
             $table->string('warranty');
             $table->enum('status',['active','deactive']);
+            $table->enum('is_promo',['yes','no']);
+            $table->enum('is_featured',['yes','no']);
+            $table->enum('is_discounted',['yes','no']);
+            $table->enum('is_trending',['yes','no']);
             $table->timestamps();
         });
     }

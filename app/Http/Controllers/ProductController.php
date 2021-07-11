@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use  App\Models\Product;
+use  App\Models\Brand;
 use DB;
 use Storage;
 class ProductController extends Controller
@@ -19,11 +20,13 @@ class ProductController extends Controller
         $categories=DB::table('categories')->where('status','active')->get();
         $sizes=DB::table('sizes')->where('status','active')->get();
         $colors=DB::table('colors')->where('status','active')->get();
+        $brands=Brand::all();
         // dd($categories);
         return view('admin.product.create')->with([
             'categories'=>$categories,
             'sizes'=>$sizes,
-            'colors'=>$colors
+            'colors'=>$colors,
+            'brands'=>$brands
         ]);
     }
 
@@ -42,7 +45,6 @@ class ProductController extends Controller
             'warranty'=>'required',
             'attr_image'=>'required'
         ]);
-        // dd($request->all());
         // dd($data);
         $product=new Product();
         $product->name=$data['name'];
@@ -115,13 +117,15 @@ class ProductController extends Controller
         $colors=DB::table('colors')->where('status','active')->get();
         $attributes=DB::table('products_attr')->where('product_id',$id)->get();
         $images=DB::table('product_images')->where('product_id',$id)->get();
+        $brands=Brand::all();
         return view('admin.product.edit')->with([
             'product'=>$product,
             'categories'=>$categories,
             'sizes'=>$sizes,
             'colors'=>$colors,
             'attributes'=>$attributes,
-            'images'=>$images
+            'images'=>$images,
+            'brands'=>$brands
         ]);
     }
 
@@ -138,8 +142,13 @@ class ProductController extends Controller
             'keywords'=>'required',
             'technical_specification'=>'required',
             'warranty'=>'required',
+            'is_promo'=>'required',
+            'is_featured'=>'required',
+            'is_discounted'=>'required',
+            'is_trending'=>'required'
         ]);
-
+        //dd($request->all());
+        // dd($data);
         $product= Product::find($id);
         $product->name=$data['name'];
         $product->category_id=$data['category_id'];
@@ -159,6 +168,10 @@ class ProductController extends Controller
         $product->keywords=$data['keywords'];
         $product->technical_specification=$data['technical_specification'];
         $product->warranty=$data['warranty'];
+        $product->is_promo=$data['is_promo'];
+        $product->is_featured=$data['is_featured'];
+        $product->is_discounted=$data['is_discounted'];
+        $product->is_trending=$data['is_trending'];
         $product->save();
 
         $attributes=DB::table('products_attr')->select('id')->where('product_id',$id)->get();

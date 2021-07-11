@@ -69,4 +69,28 @@ Route::group(['middleware'=>'admin_auth','as'=>'admin.'],function(){
     Route::put('admin/product/{product}',[App\Http\Controllers\ProductController::class,'update'])->name('product.update');
     Route::delete('admin/product/{product}',[App\Http\Controllers\ProductController::class,'destroy'])->name('product.destroy');
     Route::get('/admin/product/status/{product}',[App\Http\Controllers\ProductController::class,'status'])->name('product.status');
+
+    //Brand routes
+    Route::get('/admin/brand',[App\Http\Controllers\BrandController::class,'index'])->name('brand');
+    Route::get('/admin/brand/create',[App\Http\Controllers\BrandController::class,'create'])->name('brand.create');
+    Route::post('/admin/brand',[App\Http\Controllers\BrandController::class,'store'])->name('brand.store');
+    Route::get('admin/brand/{brand}',[App\Http\Controllers\BrandController::class,'edit'])->name('brand.edit');
+    Route::put('admin/brand/{brand}',[App\Http\Controllers\BrandController::class,'update'])->name('brand.update');
+    Route::delete('admin/brand/{brand}',[App\Http\Controllers\BrandController::class,'destroy'])->name('brand.destroy');
+    Route::get('/admin/brand/status/{brand}',[App\Http\Controllers\BrandController::class,'status'])->name('brand.status');
+
+    //tax routes
+    Route::get('/admin/tax',[App\Http\Controllers\TaxController::class,'index'])->name('tax');
+    Route::get('/admin/tax/create',[App\Http\Controllers\TaxController::class,'create'])->name('tax.create');
+    Route::post('/admin/tax',[App\Http\Controllers\TaxController::class,'store'])->name('tax.store');
+    Route::get('admin/tax/{tax}',[App\Http\Controllers\TaxController::class,'edit'])->name('tax.edit');
+    Route::put('admin/tax/{tax}',[App\Http\Controllers\TaxController::class,'update'])->name('tax.update');
+    Route::delete('admin/tax/{tax}',[App\Http\Controllers\TaxController::class,'destroy'])->name('tax.destroy');
+    Route::get('/admin/tax/status/{tax}',[App\Http\Controllers\TaxController::class,'status'])->name('tax.status');
+
+    //customer routes
+    Route::get('/admin/customer',[App\Http\Controllers\CustomerController::class,'index'])->name('customer');
+    Route::get('/admin/customer/{customer}',[App\Http\Controllers\CustomerController::class,'show'])->name('customer.show');
+    Route::get('/admin/customer/create',[App\Http\Controllers\CustomerController::class,'create'])->name('customer.create');
+    Route::get('/admin/customer/status/{customer}',[App\Http\Controllers\CustomerController::class,'status'])->name('customer.status');
 });

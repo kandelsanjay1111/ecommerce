@@ -28,9 +28,18 @@
                     <label for="slug" class="control-label mb-1">Product slug</label>
                     <input id="slug" name="slug" type="text" class="form-control @error('slug') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{old('slug')}}">
                 </div>
-                <div class="form-group">
-                	<label for="image" class="control-label mb-1">Product image</label>
-                	<input type="file" name="image" class="form-control @error('slug') is-invalid @enderror">
+                <div class="form-group row" id="product_image">
+                    <div class="col-md-12">
+                        <label for="image" class="control-label mb-1">Product image</label>
+                        <button id="add_image" type="button" class="btn  btn-success my-2"><i class="zmdi zmdi-plus"></i> Add</button>
+                    </div>
+                    <div class="col-md-4">  
+                        <input type="file" name="image[]" class="form-control @error('image') is-invalid @enderror">
+                        <img class="w-100" src="">
+                        <div class="text-center my-2">
+                        <button type="button" class="btn btn-danger m-auto remove_image">Remove</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="brand" class="control-label mb-1"> Brand</label>
@@ -64,6 +73,47 @@
                     <label for="warranty" class="control-label mb-1"> warranty</label>
                     <input id="warranty" name="warranty" type="text" class="form-control @error('warranty') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{old('warranty')}}">
                 </div>
+
+                <div class="form-group row">
+                    <div class="col-md-4">
+                        <label for="is_promo" class="control-label mb-1"> Promo</label>
+                        <select id="is_promo" name="is_promo" class="form-control @error('is_promo') is-invalid @enderror">
+                            <option value="yes">yes</option>
+                            <option value="no">no</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                        <label for="model" class="control-label mb-1"> Featured</label>
+                        <select id="is_featured" name="is_featured" class="form-control @error('is_featured') is-invalid @enderror">
+                            <option value="yes">yes</option>
+                            <option value="no">no</option>
+                        </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="is_discounted" class="control-label mb-1"> Discounted</label>
+                        <select id="is_discounted" name="is_discounted" class="form-control @error('is_discounted') is-invalid @enderror">
+                            <option value="yes">yes</option>
+                            <option value="no">no</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                        <label for="is_trending" class="control-label mb-1"> Trending</label>
+                        <select id="is_trending" name="is_trending" class="form-control @error('is_trending') is-invalid @enderror">
+                            <option value="yes">yes</option>
+                            <option value="no">no</option>
+                        </select>
+                        </div>
+                    </div>
+
+                </div>
+
+
                 <h2 class="my-4">Product Attributes</h2>
                 <button id="add_btn" type="button" class="btn btn-info">Add new</button>
                 <div id="product_attribute">
@@ -141,4 +191,35 @@
         $(this).closest('.row').remove();
     });
 </script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#add_image').click(function(){
+            let image_element=$('#product_image').find('.col-md-4').html();
+            let image_html='<div class="col-md-4">'+image_element+'</div>';
+            //console.log(image_html);
+            $('#product_image').append(image_html);
+            let last_image=$('#product_image').find('.col-md-4').last();
+            last_image.find('input').val('');
+            last_image.find('img').attr('src','');
+        })
+    })
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('body').on('click','.remove_image',function(){
+            let count=$('#product_image').find('.col-md-4').length;
+            //console.log(count);
+            if(count>1)
+            {
+            $(this).parent().parent().remove();
+            }
+            else{
+                alert('you cannot delete this');
+            }
+        });
+    });
+</script>
+
 @endsection

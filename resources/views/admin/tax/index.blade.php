@@ -1,13 +1,13 @@
 @extends('admin.layout')
-@section('title','Category page')
-@section('category_select','active')
+@section('title','Tax page')
+@section('tax_select','active')
 @section('content')
 <div class="row">
         <div class="col-lg-12">
-            <h2 class="title-1 m-b-25">All Category</h2>
+            <h2 class="title-1 m-b-25">All Tax</h2>
             <div class="row">
                <div class="col-lg-3">
-                   <a class="au-btn au-btn-icon au-btn--blue mb-2" href="{{route('admin.category.create')}}"><i class="zmdi zmdi-plus"></i>add item</a>
+                   <a class="au-btn au-btn-icon au-btn--blue mb-2" href="{{route('admin.tax.create')}}"><i class="zmdi zmdi-plus"></i>add item</a>
                </div> 
                <div class="col-lg-9">
                 @if(Session::has('success'))
@@ -27,31 +27,28 @@
                     <thead>
                         <tr>
                             <th>Id</th>
-                            <th>Category Name</th>
-                            <th>Category Slug</th>
-                            <th>Category Image</th>
+                            <th>Tax Description</th>
+                            <th>Tax Amount</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($categories as $category)
+                        @foreach($taxes as $tax)
                         <tr>
                             <td>{{$loop->index+1}}</td>
-                            <td>{{$category->category_name}}</td>
-                            <td>{{$category->category_slug}}</td>
-                            <td><img src="{{asset('storage/media/'.$category->category_image)}}"></td>
+                            <td>{{$tax->tax_desc}}</td>
+                            <td>{{$tax->amount}}</td>
                             <td class="text-right">
-                                <a class="{{$category->status=='active'?'btn btn-success':'btn btn-secondary'}}" href="{{route('admin.category.status',$category->id)}}">{{$category->status=='active'?'Active':'Deactive'}}</a>
-                                <a href="{{route('admin.category.update',$category->id)}}" class="btn btn-info mr-1">Edit</a>
-                                
+                                <a class="{{$tax->status=='active'?'btn btn-success':'btn btn-secondary'}}" href="{{route('admin.tax.status',$tax->id)}}">{{$tax->status=='active'?'Active':'Deactive'}}</a>
+                                <a href="{{route('admin.tax.update',$tax->id)}}" class="btn btn-info mr-1">Edit</a>
                                 <a href="" class="btn btn-danger" onclick="
                                 event.preventDefault();
                                 let is_delete=confirm('Do you want to delete');
                                 if(is_delete){
                                     document.getElementById('delete-'+{{$loop->index}}).submit();
-                                }
-                            ">Delete</a></td>
-                            <form id="delete-{{$loop->index}}" action="{{route('admin.category.destroy',$category->id)}}" method="POST">
+                                }">Delete</a>
+                            </td>
+                            <form id="delete-{{$loop->index}}" action="{{route('admin.tax.destroy',$tax->id)}}" method="POST">
                                 @csrf
                                 {{method_field('DELETE')}}
                             </form>
@@ -62,5 +59,4 @@
             </div>
         </div>
     </div>
-
 @endsection

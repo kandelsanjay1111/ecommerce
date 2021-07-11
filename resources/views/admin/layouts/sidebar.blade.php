@@ -23,8 +23,17 @@
                         <li class="@yield('color_select')">
                             <a href="{{route('admin.color')}}"><i class="fas fa-paint-brush"></i>Color</a>
                         </li>
+                        <li class="@yield('brand_select')">
+                            <a href="{{route('admin.brand')}}"><i class="fab fa-gripfire"></i>Brand</a>
+                        </li>
+                        <li class="@yield('tax_select')">
+                            <a href="{{route('admin.tax')}}"><i class="fas fa-money-bill-alt"></i>Taxes</a>
+                        </li>
                         <li class="@yield('product_select')">
                             <a href="{{route('admin.product')}}"><i class="fas fa-shopping-cart"></i>Product</a>
+                        </li>
+                        <li class="@yield('customer_select')">
+                            <a href="{{route('admin.customer')}}"><i class="fas fa-users"></i>Customers</a>
                         </li>
                     </ul>
                 </nav>

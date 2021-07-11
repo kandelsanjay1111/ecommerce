@@ -45,21 +45,31 @@
                     </div>
                     @endforeach
                 </div>
-                <div class="form-group">
-                    <label for="brand" class="control-label mb-1"> Brand</label>
-                    <input id="brand" name="brand" type="text" class="form-control @error('brand') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{$product->brand}}">
-                </div>
-                <div class="form-group">
-                    <label for="model" class="control-label mb-1"> Model</label>
-                    <input id="model" name="model" type="text" class="form-control @error('model') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{$product->model}}">
-                </div>
-                <div class="form-group">
-                	<label for="category_id" class="control-label mb-1"> Category</label>
-                	<select id="category_id" name="category_id" class="form-control @error('category_id') is-invalid @enderror">
-                		@foreach($categories as $category)
-                		<option value="{{$category->id}}" @if($category->id==$product->category_id) selected @endif>{{$category->category_name}}</option>
-                        @endforeach
-                	</select>
+                <div class="form-group row">
+                    <div class="col-md-4">
+                        <label for="brand" class="control-label mb-1"> Brand</label>
+                        <select id="brand" name="brand" class="form-control @error('brand_id') is-invalid @enderror">
+                            @foreach($brands as $brand)
+                            <option value="{{$brand->name}}" @if($brand->name==$product->brand) selected @endif>{{$brand->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                        <label for="model" class="control-label mb-1"> Model</label>
+                        <input id="model" name="model" type="text" class="form-control @error('model') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{$product->model}}">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="category_id" class="control-label mb-1"> Category</label>
+                        <select id="category_id" name="category_id" class="form-control @error('category_id') is-invalid @enderror">
+                            @foreach($categories as $category)
+                            <option value="{{$category->id}}" @if($category->id==$product->category_id) selected @endif>{{$category->category_name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="short_desc" class="control-label mb-1"> Short Description</label>
@@ -77,6 +87,46 @@
                     <label for="warranty" class="control-label mb-1"> warranty</label>
                     <input id="warranty" name="warranty" type="text" class="form-control @error('warranty') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{$product->warranty}}">
                 </div>
+
+                <div class="form-group row">
+                    <div class="col-md-4">
+                        <label for="is_promo" class="control-label mb-1"> Promo</label>
+                        <select id="is_promo" name="is_promo" class="form-control @error('is_promo') is-invalid @enderror">
+                            <option value="yes"  @if($product->is_promo=='yes') selected @endif>yes</option>
+                            <option value="no" @if($product->is_promo=='no') selected @endif>no</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                        <label for="model" class="control-label mb-1"> Featured</label>
+                        <select id="is_featured" name="is_featured" class="form-control @error('is_featured') is-invalid @enderror">
+                            <option value="yes" @if($product->is_featured=='yes') selected @endif>yes</option>
+                            <option value="no" @if($product->is_featured=='no') selected @endif>no</option>
+                        </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="is_discounted" class="control-label mb-1"> Discounted</label>
+                        <select id="is_discounted" name="is_discounted" class="form-control @error('is_discounted') is-invalid @enderror">
+                            <option value="yes" @if($product->is_discounted=='yes') selected @endif>yes</option>
+                            <option value="no" @if($product->is_discounted=='no') selected @endif>no</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                        <label for="is_trending" class="control-label mb-1"> Trending</label>
+                        <select id="is_trending" name="is_trending" class="form-control @error('is_trending') is-invalid @enderror">
+                            <option value="yes" @if($product->is_trending=='yes') selected @endif>yes</option>
+                            <option value="no" @if($product->is_trending=='no') selected @endif>no</option>
+                        </select>
+                        </div>
+                    </div>
+
+                </div>
+
                 <h2 class="my-4">Product Attributes</h2>
                 <button id="add_btn" type="button" class="btn btn-success"><i class="zmdi zmdi-plus"></i> Add new</button>
                 <div id="product_attribute">
@@ -189,5 +239,11 @@
             }
         });
     });
+</script>
+
+<script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
+<script type="text/javascript">
+    CKEDITOR.replace('short_desc');
+    CKEDITOR.replace('technical_specification');
 </script>
 @endsection
