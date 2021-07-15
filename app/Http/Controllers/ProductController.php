@@ -38,24 +38,25 @@ class ProductController extends Controller
             'slug'=>'required|string|max:255|unique:products',
             'brand'=>'required',
             'model'=>'required',
-            'image'=>'required|mimes:jpg,png,jpeg',
+            'image'=>'required',
             'short_desc'=>'required',
             'keywords'=>'required',
             'technical_specification'=>'required',
             'warranty'=>'required',
-            'attr_image'=>'required'
+            'attr_image'=>'required',
+            'product_image'=>'required'
         ]);
-        // dd($data);
+         // dd($request->all());
         $product=new Product();
         $product->name=$data['name'];
         $product->category_id=$data['category_id'];
         $product->slug=$data['slug'];
         $product->brand=$data['brand'];
-        if($request->hasFile('image'))
+        if($request->hasFile('product_image'))
         {
-            $ext=$request->file('image')->extension();
+            $ext=$request->file('product_image')->extension();
             $image_name=$request->slug.time().'.'.$ext;
-            $request->image->storeAs('public/media',$image_name);
+            $request->product_image->storeAs('public/media',$image_name);
             $product->image=$image_name;
         }
         $product->model=$data['model'];
@@ -80,7 +81,7 @@ class ProductController extends Controller
             {
                 $ext=$request->file('attr_image')[$key]->extension();
                 $image_name=$request->slug.time().'.'.$ext;
-                $request->image->storeAs('public/media',$image_name);
+                $request->attr_image[$key]->storeAs('public/media',$image_name);
                 $newData['image']=$image_name;
             }
 
@@ -145,23 +146,28 @@ class ProductController extends Controller
             'is_promo'=>'required',
             'is_featured'=>'required',
             'is_discounted'=>'required',
-            'is_trending'=>'required'
+            'is_trending'=>'required',
+            'product_image'=>'sometimes|mimes:jpg,jpeg,png'
         ]);
-        //dd($request->all());
-        // dd($data);
+
+        // dd($request->image);
         $product= Product::find($id);
         $product->name=$data['name'];
         $product->category_id=$data['category_id'];
         $product->slug=$data['slug'];
         $product->brand=$data['brand'];
 
-        // if($request->hasFile('image'))
-        // {
-        //     $ext=$request->file('image')->extension();
-        //     $image_name=$request->slug.time().'.'.$ext;
-        //     $request->image->storeAs('public/media',$image_name);
-        //     $product->image=$image_name;
-        // }
+        if($request->hasFile('product_image'))
+        {
+            $ext=$request->file('product_image')->extension();
+            $image_name=$request->slug.time().'.'.$ext;
+            if(Storage::exists('public/media/'.$product->image))
+            {
+                Storage::delete('public/media/'.$product->image);
+            }
+            $request->product_image->storeAs('public/media',$image_name);
+            $product->image=$image_name;
+        }
         
         $product->model=$data['model'];
         $product->short_desc=$data['short_desc'];
@@ -230,7 +236,8 @@ class ProductController extends Controller
 
         //delete multiple images
         $product_images=DB::table('product_images')->select('id')->where('product_id',$id)->get();
-          foreach ($product_images as $key => $images) {
+          foreach ($product_images as $key => $images) 
+          {
               $image_ids[]=$images->id;
           }
           $deleted_image_ids=array_diff($image_ids,$request->image_id);
@@ -238,7 +245,16 @@ class ProductController extends Controller
           {
             foreach($deleted_image_ids as $img_id)
             {
-                $product_image=DB::table('product_images')->where('id',$img_id)->delete();
+                $product_image=DB::table('product_images')->where('id',$img_id);
+                $image_item=$product_image->get();
+                foreach($image_item as $item)
+                {
+                    if($item->image)
+                    {
+                        Storage::delete('public/media/'.$item->image);
+                    }
+                }
+                $product_image->delete();
             }
           }
 
@@ -247,25 +263,37 @@ class ProductController extends Controller
           if($request->hasFile('image'))
           {
 
-              foreach($request->image as $key=>$image)
-              {
-                $newImage=['product_id'=>$product->id];
-
-                $ext=$request->image[$key]->extension();
-                $image_name=$request->slug.time().'.'.$ext;
-                $request->image[$key]->storeAs('public/media',$image_name);
-                $newImage['image']=$image_name;
-
-
-                if($request->image_id[$key]=='')
+            foreach($request->image as $key=>$image)
+            {
+                // dd($request->image_id);
+                if($request->image_id[$key]!='')
                 {
-                DB::table('product_images')->insert($newImage);
+                    $ext=$request->image[$key]->extension();
+                    $image_name=$request->slug.$request->image_id[$key].time().'.'.$ext;
+                    $request->image[$key]->storeAs('public/media',$image_name);
+
+                    $product_images=DB::table('product_images')
+                                    ->where('id',$request->image_id[$key])
+                                    ->where('product_id',$id);
+                    $image_item=$product_images->first();
+                    if($image_item->image)
+                    {
+                        Storage::delete('public/media/'.$image_item->image);
+                    }
+                    $product_images->update(['image'=>$image_name]);
                 }
-                else{
-                    $product_images=DB::table('product_images')->where('id',$request->image_id[$key]);
-                    $product_images->update($newImage);
+                else
+                {
+                    $ext=$request->image[$key]->extension();
+                    $image_name=$request->slug.time().'.'.$ext;
+                    $request->image[$key]->storeAs('public/media',$image_name);
+
+                    DB::table("product_images")->insert([
+                        'product_id'=>$id,
+                        'image'=>$image_name
+                    ]);
                 }
-              }
+            }
 
           }
 
@@ -274,7 +302,32 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
+        if($product->image)
+        {
+            Storage::delete('/public/media/'.$product->image);
+        }
+        $attributes=DB::table('products_attr')->where('product_id',$product->id);
+        foreach($attributes->get() as $attribute)
+        {
+            if($attribute->image)
+            {
+                Storage::delete('/public/media/'.$attribute->image);
+            }
+        }
+
+        $product_images=DB::table('product_images')->where('product_id',$product->id);
+        foreach($product_images->get() as $image)
+        {
+            if($image->image)
+            {
+                Storage::delete('/storage/media'.$image->image);
+            }
+        }
+
+        $product_images->delete();
+        $attributes->delete();
         $product->delete();
+
         return redirect()->route('admin.product')->with('success','Product is deleted successfully');
     }
 

@@ -21,17 +21,31 @@
             <form action="{{route('admin.product.update',$product->id)}}" method="post" novalidate="novalidate" enctype="multipart/form-data">
                 @csrf
                 {{method_field('PUT')}}
-                <div class="form-group">
-                    <label for="name" class="control-label mb-1">Product name</label>
-                    <input id="name" name="name" type="text" class="form-control @error('name') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{$product->name}}">
+                <div class="form-group row">
+                    <div class="col-md-4">
+                        <label for="name" class="control-label mb-1">Product name</label>
+                        <input id="name" name="name" type="text" class="form-control @error('name') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{$product->name}}">
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                        <label for="slug" class="control-label mb-1">Product slug</label>
+                        <input id="slug" name="slug" type="text" class="form-control @error('slug') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{$product->slug}}">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                       <div class="form-group">
+                         <label for="product_image" class="control-label mb-1">Product image</label>  
+                         <input type="file" name="product_image" id="product_image" class="form-control">
+                       </div> 
+                       <img src="{{asset('storage/media/'.$product->image)}}">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="slug" class="control-label mb-1">Product slug</label>
-                    <input id="slug" name="slug" type="text" class="form-control @error('slug') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{$product->slug}}">
-                </div>
-                <div class="form-group row" id="product_image">
+
+                <div class="form-group row" id="product_images">
                     <div class="col-md-12">
-                    	<label for="image" class="control-label mb-1">Product image</label>
+                    	<label for="image" class="control-label mb-1">Multiple image</label>
                         <button id="add_image" type="button" class="btn  btn-success my-2"><i class="zmdi zmdi-plus"></i> Add</button>
                     </div>
                     @foreach($images as $image)
@@ -214,11 +228,11 @@
 <script type="text/javascript">
     $(document).ready(function(){
         $('#add_image').click(function(){
-            let image_element=$('#product_image').find('.col-md-4').html();
+            let image_element=$('#product_images').find('.col-md-4').html();
             let image_html='<div class="col-md-4">'+image_element+'</div>';
             //console.log(image_html);
-            $('#product_image').append(image_html);
-            let last_image=$('#product_image').find('.col-md-4').last();
+            $('#product_images').append(image_html);
+            let last_image=$('#product_images').find('.col-md-4').last();
             last_image.find('input').val('');
             last_image.find('img').attr('src','');
         })
@@ -228,7 +242,7 @@
 <script type="text/javascript">
     $(document).ready(function(){
         $('body').on('click','.remove_image',function(){
-            let count=$('#product_image').find('.col-md-4').length;
+            let count=$('#product_images').find('.col-md-4').length;
             //console.log(count);
             if(count>1)
             {

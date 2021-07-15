@@ -14,9 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/',[App\Http\Controllers\Front\FrontController::class,'index'])->name('home');
 
 Route::get('/admin-login',[App\Http\Controllers\AdminController::class,'index'])->name('admin.login');
 Route::post('/admin-auth',[App\Http\Controllers\AdminController::class,'auth'])->name('admin.auth');

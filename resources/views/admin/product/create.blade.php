@@ -20,17 +20,31 @@
             <hr>
             <form action="{{route('admin.product.store')}}" method="post" novalidate="novalidate" enctype="multipart/form-data">
                 @csrf
-                <div class="form-group">
+                <div class="form-group row">
+                    <div class="col-md-4">
                     <label for="name" class="control-label mb-1">Product name</label>
                     <input id="name" name="name" type="text" class="form-control @error('name') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{old('name')}}">
+                    </div>
+
+                    <div class="col-md-4">
+                     <div class="form-group">
+                        <label for="slug" class="control-label mb-1">Product slug</label>
+                        <input id="slug" name="slug" type="text" class="form-control @error('slug') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{old('slug')}}">
+                     </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="product_image" class="control-label mb-1">Image</label>
+                            <input id="product_image" name="product_image" type="file" class="form-control @error('product_image') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{old('product_image')}}">
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="slug" class="control-label mb-1">Product slug</label>
-                    <input id="slug" name="slug" type="text" class="form-control @error('slug') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{old('slug')}}">
-                </div>
-                <div class="form-group row" id="product_image">
+                
+                
+                <div class="form-group row" id="product_images">
                     <div class="col-md-12">
-                        <label for="image" class="control-label mb-1">Product image</label>
+                        <label for="image" class="control-label mb-1">Multiple image</label>
                         <button id="add_image" type="button" class="btn  btn-success my-2"><i class="zmdi zmdi-plus"></i> Add</button>
                     </div>
                     <div class="col-md-4">  
@@ -41,34 +55,49 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group row">
+                    <div class="col-md-4">
                     <label for="brand" class="control-label mb-1"> Brand</label>
-                    <input id="brand" name="brand" type="text" class="form-control @error('brand') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{old('brand')}}">
+                    <select id="brand" name="brand" class="form-control @error('brand_id') is-invalid @enderror">
+                            @foreach($brands as $brand)
+                            <option value="{{$brand->name}}">{{$brand->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="model" class="control-label mb-1"> Model</label>
+                            <input id="model" name="model" type="text" class="form-control @error('model') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{old('model')}}">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                        <label for="category_id" class="control-label mb-1"> Category</label>
+                        <select id="category_id" name="category_id" class="form-control @error('category_id') is-invalid @enderror">
+                            @foreach($categories as $category)
+                            <option value="{{$category->id}}">{{$category->category_name}}</option>
+                            @endforeach
+                        </select>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="model" class="control-label mb-1"> Model</label>
-                    <input id="model" name="model" type="text" class="form-control @error('model') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{old('model')}}">
-                </div>
-                <div class="form-group">
-                	<label for="category_id" class="control-label mb-1"> Category</label>
-                	<select id="category_id" name="category_id" class="form-control @error('category_id') is-invalid @enderror">
-                        @foreach($categories as $category)
-                		<option value="{{$category->id}}">{{$category->category_name}}</option>
-                        @endforeach
-                	</select>
-                </div>
+                
                 <div class="form-group">
                     <label for="short_desc" class="control-label mb-1"> Short Description</label>
                     <textarea id="short_desc" name="short_desc" type="text" class="form-control @error('short_desc') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{old('short_desc')}}"></textarea>
                 </div>
-                <div class="form-group">
-                    <label for="keywords" class="control-label mb-1"> keywords</label>
-                    <input id="keywords" name="keywords" type="text" class="form-control @error('keywords') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{old('keywords')}}">
-                </div>
+                
                 <div class="form-group">
                     <label for="technical_specification" class="control-label mb-1"> Technical Specification</label>
                     <textarea id="technical_specification" name="technical_specification" type="text" class="form-control @error('technical_specification') is-invalid @enderror" aria-required="true" aria-invalid="false">{{old('technical_specification')}}</textarea>
                 </div>
+
+                <div class="form-group">
+                    <label for="keywords" class="control-label mb-1"> keywords</label>
+                    <input id="keywords" name="keywords" type="text" class="form-control @error('keywords') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{old('keywords')}}">
+                </div>
+                
                 <div class="form-group">
                     <label for="warranty" class="control-label mb-1"> warranty</label>
                     <input id="warranty" name="warranty" type="text" class="form-control @error('warranty') is-invalid @enderror" aria-required="true" aria-invalid="false" value="{{old('warranty')}}">
@@ -195,11 +224,11 @@
 <script type="text/javascript">
     $(document).ready(function(){
         $('#add_image').click(function(){
-            let image_element=$('#product_image').find('.col-md-4').html();
+            let image_element=$('#product_images').find('.col-md-4').html();
             let image_html='<div class="col-md-4">'+image_element+'</div>';
             //console.log(image_html);
-            $('#product_image').append(image_html);
-            let last_image=$('#product_image').find('.col-md-4').last();
+            $('#product_images').append(image_html);
+            let last_image=$('#product_images').find('.col-md-4').last();
             last_image.find('input').val('');
             last_image.find('img').attr('src','');
         })
@@ -220,6 +249,12 @@
             }
         });
     });
+</script>
+
+<script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
+<script type="text/javascript">
+    CKEDITOR.replace('short_desc');
+    CKEDITOR.replace('technical_specification');
 </script>
 
 @endsection
