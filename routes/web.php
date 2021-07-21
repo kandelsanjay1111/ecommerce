@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/',[App\Http\Controllers\Front\FrontController::class,'index'])->name('home');
+Route::get('/product/{product}',[App\Http\Controllers\Front\FrontController::class,'product'])->name('product');
 
 Route::get('/admin-login',[App\Http\Controllers\AdminController::class,'index'])->name('admin.login');
 Route::post('/admin-auth',[App\Http\Controllers\AdminController::class,'auth'])->name('admin.auth');
@@ -91,4 +92,13 @@ Route::group(['middleware'=>'admin_auth','as'=>'admin.'],function(){
     Route::get('/admin/customer/{customer}',[App\Http\Controllers\CustomerController::class,'show'])->name('customer.show');
     Route::get('/admin/customer/create',[App\Http\Controllers\CustomerController::class,'create'])->name('customer.create');
     Route::get('/admin/customer/status/{customer}',[App\Http\Controllers\CustomerController::class,'status'])->name('customer.status');
+
+    //Banner routes
+    Route::get('/admin/banner',[App\Http\Controllers\BannerController::class,'index'])->name('banner');
+    Route::get('/admin/banner/create',[App\Http\Controllers\BannerController::class,'create'])->name('banner.create');
+    Route::post('/admin/banner',[App\Http\Controllers\BannerController::class,'store'])->name('banner.store'); 
+    Route::get('admin/banner/{banner}',[App\Http\Controllers\BannerController::class,'edit'])->name('banner.edit');  
+    Route::put('admin/banner/{banner}',[App\Http\Controllers\BannerController::class,'update'])->name('banner.update');
+    Route::delete('admin/banner/{banner}',[App\Http\Controllers\BannerController::class,'destroy'])->name('banner.destroy');
+    Route::get('/admin/banner/status/{banner}',[App\Http\Controllers\BannerController::class,'status'])->name('banner.status'); 
 });

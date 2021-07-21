@@ -16,25 +16,6 @@
             <!-- Left nav -->
             <ul class="nav navbar-nav">
               <li><a href="index.html">Home</a></li>
-              <li><a href="#">Men <span class="caret"></span></a>
-                <ul class="dropdown-menu">                
-                  <li><a href="#">Casual</a></li>
-                  <li><a href="#">Sports</a></li>
-                  <li><a href="#">Formal</a></li>
-                  <li><a href="#">Standard</a></li>                                                
-                  <li><a href="#">T-Shirts</a></li>
-                  <li><a href="#">Shirts</a></li>
-                  <li><a href="#">Jeans</a></li>
-                  <li><a href="#">Trousers</a></li>
-                  <li><a href="#">And more.. <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                      <li><a href="#">Sleep Wear</a></li>
-                      <li><a href="#">Sandals</a></li>
-                      <li><a href="#">Loafers</a></li>                                      
-                    </ul>
-                  </li>
-                </ul>
-              </li>
               <li><a href="#">Women <span class="caret"></span></a>
                 <ul class="dropdown-menu">  
                   <li><a href="#">Kurta & Kurti</a></li>                                                                
@@ -77,35 +58,6 @@
                   </li>
                 </ul>
               </li>
-              <li><a href="#">Kids <span class="caret"></span></a>
-                <ul class="dropdown-menu">                
-                  <li><a href="#">Casual</a></li>
-                  <li><a href="#">Sports</a></li>
-                  <li><a href="#">Formal</a></li>
-                  <li><a href="#">Standard</a></li>                                                
-                  <li><a href="#">T-Shirts</a></li>
-                  <li><a href="#">Shirts</a></li>
-                  <li><a href="#">Jeans</a></li>
-                  <li><a href="#">Trousers</a></li>
-                  <li><a href="#">And more.. <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                      <li><a href="#">Sleep Wear</a></li>
-                      <li><a href="#">Sandals</a></li>
-                      <li><a href="#">Loafers</a></li>                                      
-                    </ul>
-                  </li>
-                </ul>
-              </li>
-              <li><a href="#">Sports</a></li>
-             <li><a href="#">Digital <span class="caret"></span></a>
-                <ul class="dropdown-menu">                
-                  <li><a href="#">Camera</a></li>
-                  <li><a href="#">Mobile</a></li>
-                  <li><a href="#">Tablet</a></li>
-                  <li><a href="#">Laptop</a></li>                                                
-                  <li><a href="#">Accesories</a></li>                
-                </ul>
-              </li>
               <li><a href="#">Furniture</a></li>            
               <li><a href="blog-archive.html">Blog <span class="caret"></span></a>
                 <ul class="dropdown-menu">                
@@ -122,6 +74,19 @@
                   <li><a href="404.html">404 Page</a></li>                
                 </ul>
               </li>
+              @foreach($categories as $category)
+              @if($category->subcategory->count()>0)
+              <li><a href="#">{{$category->category_name}} <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  @foreach($category->subcategory as $subcategory)
+                  <li><a href="">{{$subcategory->category_name}}</a></li>
+                  @endforeach
+                </ul>
+              </li>
+              @else
+              <li><a href="#">{{$category->category_name}}</a></li>
+              @endif
+              @endforeach
             </ul>
           </div><!--/.nav-collapse -->
         </div>

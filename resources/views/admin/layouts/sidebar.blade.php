@@ -29,6 +29,9 @@
                         <li class="@yield('tax_select')">
                             <a href="{{route('admin.tax')}}"><i class="fas fa-money-bill-alt"></i>Taxes</a>
                         </li>
+                        <li class="@yield('banner_select')">
+                            <a href="{{route('admin.banner')}}"><i class="fas fa-money-bill-alt"></i>Banner</a>
+                        </li>
                         <li class="@yield('product_select')">
                             <a href="{{route('admin.product')}}"><i class="fas fa-shopping-cart"></i>Product</a>
                         </li>
