@@ -4,7 +4,7 @@
 @section('content')
 <div class="row">
         <div class="col-lg-12">
-            <h2 class="title-1 m-b-25">All Coupon</h2>
+            <h2 class="title-1 m-b-25">All Sizes</h2>
             <div class="row">
                <div class="col-lg-3">
                    <a class="au-btn au-btn-icon au-btn--blue mb-2" href="{{route('admin.size.create')}}"><i class="zmdi zmdi-plus"></i>add item</a>

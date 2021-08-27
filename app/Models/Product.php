@@ -18,4 +18,9 @@ class Product extends Model
     {
         return $this->hasMany('App\Models\ProductAttribute');
     }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 }

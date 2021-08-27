@@ -48,7 +48,7 @@
                 <ul class="aa-head-top-nav-right">
                   <li><a href="account.html">My Account</a></li>
                   <li class="hidden-xs"><a href="wishlist.html">Wishlist</a></li>
-                  <li class="hidden-xs"><a href="cart.html">My Cart</a></li>
+                  <li class="hidden-xs"><a href="{{route('cart')}}">My Cart</a></li>
                   <li class="hidden-xs"><a href="checkout.html">Checkout</a></li>
                   <li><a href="" data-toggle="modal" data-target="#login-modal">Login</a></li>
                 </ul>
@@ -77,44 +77,55 @@
                 <!-- <a href="index.html"><img src="frontend/img/logo.jpg" alt="logo img"></a> -->
               </div>
               <!-- / logo  -->
-               <!-- cart box -->
+              @if(session()->has('cart'))
               <div class="aa-cartbox">
                 <a class="aa-cart-link" href="#">
                   <span class="fa fa-shopping-basket"></span>
                   <span class="aa-cart-title">SHOPPING CART</span>
-                  <span class="aa-cart-notify">2</span>
+                  <span class="aa-cart-notify">{{count(session()->get('cart'))}}</span>
                 </a>
+                
                 <div class="aa-cartbox-summary">
                   <ul>
+                    @foreach(session()->get('cart') as $key=>$cart)
                     <li>
                       <a class="aa-cartbox-img" href="#"><img src="{{asset('frontend/img/woman-small-2.jpg')}}" alt="img"></a>
                       <div class="aa-cartbox-info">
-                        <h4><a href="#">Product Name</a></h4>
-                        <p>1 x $250</p>
+                        <h4><a href="#">{{$cart['name']}}</a></h4>
+                        <p>{{$cart['quantity']}}x ${{$cart['price']}}</p>
                       </div>
-                      <a class="aa-remove-product" href="#"><span class="fa fa-times"></span></a>
+                      <a class="aa-remove-product" href="{{route('cart.remove',$key)}}"><span class="fa fa-times"></span></a>
                     </li>
-                    <li>
-                      <a class="aa-cartbox-img" href="#"><img src="{{asset('frontend/img/woman-small-1.jpg')}}" alt="img"></a>
-                      <div class="aa-cartbox-info">
-                        <h4><a href="#">Product Name</a></h4>
-                        <p>1 x $250</p>
-                      </div>
-                      <a class="aa-remove-product" href="#"><span class="fa fa-times"></span></a>
-                    </li>                    
+                    @endforeach                 
                     <li>
                       <span class="aa-cartbox-total-title">
                         Total
                       </span>
                       <span class="aa-cartbox-total-price">
-                        $500
+                        @php 
+                        $total=0;
+                        foreach(session()->get('cart') as $item){
+                          $total+=$item['quantity']*$item['price'];
+                        }
+                        echo '$'.$total;
+                        @endphp
                       </span>
                     </li>
                   </ul>
                   <a class="aa-cartbox-checkout aa-primary-btn" href="checkout.html">Checkout</a>
                 </div>
+                
               </div>
               <!-- / cart box -->
+              @else
+              <div class="aa-cartbox">
+                <a class="aa-cart-link" href="#">
+                  <span class="fa fa-shopping-basket"></span>
+                  <span class="aa-cart-title">SHOPPING CART</span>
+                  <span class="aa-cart-notify">0</span>
+                </a>
+              </div>
+              @endif
               <!-- search box -->
               <div class="aa-search-box">
                 <form action="">

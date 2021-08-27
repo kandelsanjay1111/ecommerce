@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Models\Category;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        view()->composer('frontend.layout.menu',function($view){
+            $view->with('navlinks',Category::where('parent_id',NULL)
+            ->where('status','active')
+            ->with('subcategory')
+            ->where('status','active')
+            ->get());
+        });
     }
 }

@@ -11,15 +11,25 @@ use Illuminate\Support\Facades\Route;
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+*/ 
 
 
 Route::get('/',[App\Http\Controllers\Front\FrontController::class,'index'])->name('home');
-Route::get('/product/{product}',[App\Http\Controllers\Front\FrontController::class,'product'])->name('product');
+Route::get('/product/{id}',[App\Http\Controllers\Front\ProductController::class,'product'])->name('product');
+//cart routes
+Route::get('/cart',[App\Http\Controllers\Front\ProductController::class,'cart'])->name('cart');
+Route::post('/add-to-cart',[App\Http\Controllers\Front\ProductController::class,'addToCart'])->name('cart.add');
+Route::get('/delete-cart/{id}',[App\Http\Controllers\Front\ProductController::class,'deleteCart'])->name('cart.remove');
+
+//category routes
+Route::get('/category',[App\Http\Controllers\Front\CategoryController::class,'index'])->name('categtory');
+//login routes
 
 Route::get('/admin-login',[App\Http\Controllers\AdminController::class,'index'])->name('admin.login');
 Route::post('/admin-auth',[App\Http\Controllers\AdminController::class,'auth'])->name('admin.auth');
 Route::post('/admin-logout',[App\Http\Controllers\AdminController::class,'logout'])->name('admin.logout');
+
+
 Route::group(['middleware'=>'admin_auth','as'=>'admin.'],function(){
 
     Route::get('/admin/dashboard',[App\Http\Controllers\AdminController::class,'dashboard'])->name('dashboard');

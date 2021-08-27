@@ -17,7 +17,6 @@ class FrontController extends Controller
                     ->where('status','active')
                     ->where('parent_id',NULL)
                     ->get();
-
         $products=Product::where('status','active')->get();
         $banners=Banner::where('status','active')->get();
         return view('frontend.index')->with([
@@ -25,10 +24,5 @@ class FrontController extends Controller
             'products'=>$products,
             'banners'=>$banners
         ]);
-    }
-
-    public function product(Product $product)
-    {
-        dd($product);
     }
 }

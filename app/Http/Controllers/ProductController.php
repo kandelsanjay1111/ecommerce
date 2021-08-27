@@ -32,6 +32,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $data=$request->validate([
             'name'=>'required|string|max:255',
             'category_id'=>'required',
@@ -43,6 +44,10 @@ class ProductController extends Controller
             'keywords'=>'required',
             'technical_specification'=>'required',
             'warranty'=>'required',
+            'is_promo'=>'required',
+            'is_featured'=>'required',
+            'is_discounted'=>'required',
+            'is_trending'=>'required',
             'attr_image'=>'required',
             'product_image'=>'required'
         ]);
@@ -64,6 +69,10 @@ class ProductController extends Controller
         $product->keywords=$data['keywords'];
         $product->technical_specification=$data['technical_specification'];
         $product->warranty=$data['warranty'];
+        $product->is_promo=$data['is_promo'];
+        $product->is_featured=$data['is_featured'];
+        $product->is_discounted=$data['is_discounted'];
+        $product->is_trending=$data['is_trending'];
         $product->save();
 
         foreach ($request->sku as $key => $value) {

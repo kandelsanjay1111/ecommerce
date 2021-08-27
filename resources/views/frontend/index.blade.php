@@ -86,34 +86,34 @@
                 <!-- start prduct navigation -->
                  <ul class="nav nav-tabs aa-products-tab">
                     @foreach($categories as $category)
-                    <li class="{{$loop->index==0?'active':''}}"><a href="#{{$category->category_name}}" data-toggle="tab">{{$category->category_name}}</a></li>
+                    <li class="{{$loop->index==1?'active':''}}"><a href="#{{$category->category_name}}" data-toggle="tab">{{$category->category_name}}</a></li>
                     @endforeach
                   </ul>
                   <!-- Tab panes -->
                   <div class="tab-content">
                     @foreach($categories as $category)
                     <!-- start women product category -->
-                    <div class="tab-pane fade{{$loop->index==0?'in active':''}}" id="{{$category->category_name}}">
+                    <div class="tab-pane fade {{$loop->index==1 ? 'in active':''}}" id="{{$category->category_name}}">
                       <ul class="aa-product-catg">
                         @foreach($category->products as $product)
                         <!-- start single product item -->
-                        <li>
-                          <figure>
-                            <a class="aa-product-img" href="#"><img style="width:250px; height: 300px;" src="{{asset('storage/media/'.$product->image)}}" alt="polo shirt img"></a>
-                            <a class="aa-add-card-btn"href="#"><span class="fa fa-shopping-cart"></span>Add To Cart</a>
-                            <figcaption>
-                              <h4 class="aa-product-title"><a href="#">{{$product->name}}</a></h4>
-                              <span class="aa-product-price">Rs.{{$product->attributes[0]->mrp}}</span><span class="aa-product-price"><del>Rs.{{$product->attributes[0]->price}}</del></span>
-                            </figcaption>
-                          </figure>                         
-                          <div class="aa-product-hvr-content">
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Add to Wishlist"><span class="fa fa-heart-o"></span></a>
-                            <a href="#" data-toggle="tooltip" data-placement="top" title="Compare"><span class="fa fa-exchange"></span></a>
-                            <a href="#" data-toggle2="tooltip" data-placement="top" title="Quick View" data-toggle="modal" data-target="#quick-view-modal"><span class="fa fa-search"></span></a>                            
-                          </div>
-                          <!-- product badge -->
-                          <span class="aa-badge aa-sale" href="#">SALE!</span>
-                        </li>    
+                      <li>
+                        <figure>
+                          <a class="aa-product-img" href="#"><img src="{{asset('storage/media/'.$product->image)}}" alt="{{$product->name}}"></a>
+                          <a class="aa-add-card-btn"href="#"><span class="fa fa-shopping-cart"></span>Add To Cart</a>
+                           <figcaption>
+                            <h4 class="aa-product-title"><a href="#">{{$product->name}}</a></h4>
+                            <span class="aa-product-price">{{$product->attributes[0]->price}}</span><span class="aa-product-price"><del>{{$product->attributes[0]->mrp}}</del></span>
+                          </figcaption>
+                        </figure>                     
+                        <div class="aa-product-hvr-content">
+                          <a href="#" data-toggle="tooltip" data-placement="top" title="Add to Wishlist"><span class="fa fa-heart-o"></span></a>
+                          <a href="#" data-toggle="tooltip" data-placement="top" title="Compare"><span class="fa fa-exchange"></span></a>
+                          <a href="#" data-toggle2="tooltip" data-placement="top" title="Quick View" data-toggle="modal" data-target="#quick-view-modal"><span class="fa fa-search"></span></a>                            
+                        </div>
+                        <!-- product badge -->
+                        <span class="aa-badge aa-sale" href="#">SALE!</span>
+                      </li>   
                         @endforeach             
                       </ul>
                       <a class="aa-browse-btn" href="#">Browse all Product <span class="fa fa-long-arrow-right"></span></a>

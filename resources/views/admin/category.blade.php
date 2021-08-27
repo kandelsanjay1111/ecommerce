@@ -21,7 +21,6 @@
                 @endif
                </div>
             </div>
-            
             <div class="table-responsive table--no-card m-b-40">
                 <table class="table table-borderless table-striped table-earning">
                     <thead>
@@ -39,7 +38,7 @@
                             <td>{{$loop->index+1}}</td>
                             <td>{{$category->category_name}}</td>
                             <td>{{$category->category_slug}}</td>
-                            <td><img src="{{asset('storage/media/'.$category->category_image)}}"></td>
+                            <td><img src="{{asset('/storage/media/'.$category->category_image)}}"></td>
                             <td class="text-right">
                                 <a class="{{$category->status=='active'?'btn btn-success':'btn btn-secondary'}}" href="{{route('admin.category.status',$category->id)}}">{{$category->status=='active'?'Active':'Deactive'}}</a>
                                 <a href="{{route('admin.category.update',$category->id)}}" class="btn btn-info mr-1">Edit</a>
