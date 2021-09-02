@@ -17,5 +17,7 @@
 
 @include('frontend.layout.script')
 
+@yield('script')
+
   </body>
 </html>

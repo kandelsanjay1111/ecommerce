@@ -22,7 +22,7 @@ Route::post('/add-to-cart',[App\Http\Controllers\Front\ProductController::class,
 Route::get('/delete-cart/{id}',[App\Http\Controllers\Front\ProductController::class,'deleteCart'])->name('cart.remove');
 
 //category routes
-Route::get('/category',[App\Http\Controllers\Front\CategoryController::class,'index'])->name('categtory');
+Route::get('/category/{category}',[App\Http\Controllers\Front\CategoryController::class,'index'])->name('category');
 //login routes
 
 Route::get('/admin-login',[App\Http\Controllers\AdminController::class,'index'])->name('admin.login');

@@ -100,7 +100,7 @@
                       <li>
                         <figure>
                           <a class="aa-product-img" href="#"><img src="{{asset('storage/media/'.$product->image)}}" alt="{{$product->name}}"></a>
-                          <a class="aa-add-card-btn"href="#"><span class="fa fa-shopping-cart"></span>Add To Cart</a>
+                          <a class="aa-add-card-btn"href="{{route('product',$product->id)}}"><span class="fa fa-shopping-cart"></span>Add To Cart</a>
                            <figcaption>
                             <h4 class="aa-product-title"><a href="#">{{$product->name}}</a></h4>
                             <span class="aa-product-price">{{$product->attributes[0]->price}}</span><span class="aa-product-price"><del>{{$product->attributes[0]->mrp}}</del></span>
@@ -249,7 +249,7 @@
                     <li>
                       <figure>
                         <a class="aa-product-img" href="#"><img src="{{asset('storage/media/'.$product->image)}}" alt="{{$product->name}}"></a>
-                        <a class="aa-add-card-btn"href="#"><span class="fa fa-shopping-cart"></span>Add To Cart</a>
+                        <a class="aa-add-card-btn"href="{{route('product',$product->id)}}"><span class="fa fa-shopping-cart"></span>Add To Cart</a>
                          <figcaption>
                           <h4 class="aa-product-title"><a href="#">{{$product->name}}</a></h4>
                           <span class="aa-product-price">{{$product->attributes[0]->price}}</span><span class="aa-product-price"><del>{{$product->attributes[0]->mrp}}</del></span>
@@ -328,7 +328,17 @@
                   </ul>
                    <a class="aa-browse-btn" href="#">Browse all Product <span class="fa fa-long-arrow-right"></span></a>
                 </div>
-                <!-- / latest product category -->              
+                <!-- / latest product category -->    
+                  <form id="cart_form" action="{{route('cart.add')}}" method="POST">
+                  @csrf
+                  <input type="hidden" value="" name="product_id">
+                  <input type="hidden" value="" name="product_name">
+                  <input type="hidden" value="1" name="quantity">
+                  <input type="hidden" value="" name="color">
+                  <input type="hidden" value="" name="size">
+                  <input type="hidden" value="" name="price">
+                  <input type="hidden" value="" name="attr_id">
+                </form>          
               </div>
             </div>
           </div> 
@@ -544,4 +554,10 @@
     </div>
   </section>
   <!-- / Subscribe section -->
+@endsection
+
+@section('script')
+<script type="text/javascript">
+
+</script>
 @endsection
