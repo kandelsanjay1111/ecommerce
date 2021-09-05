@@ -23,7 +23,9 @@
     <link href="{{asset('frontend/css/sequence-theme.modern-slide-in.css')}}" rel="stylesheet" media="all">
 
     <!-- Main style sheet -->
-    <link href="{{asset('frontend/css/style.css')}}" rel="stylesheet">    
+    <link href="{{asset('frontend/css/style.css')}}" rel="stylesheet">  
+
+    @yield('css')  
 
     <!-- Google Font -->
     <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>

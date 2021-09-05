@@ -1,5 +1,7 @@
 @extends('frontend.layout.master')
-
+@section('css')
+<link rel="stylesheet" href="{{asset('css/style.css')}}">
+@endsection
 @section('content')
 <section id="aa-catg-head-banner">
    <img src="{{asset('frontend/img/fashion/fashion-header-bg-8.jpg')}}" alt="fashion img">
@@ -24,12 +26,11 @@
             <div class="aa-product-catg-head">
               <div class="aa-product-catg-head-left">
                 <form action="{{route('category',request()->segment(2))}}" class="aa-sort-form">
-                  @csrf
                   <label for="">Sort By</label>
                   <select name="sort_by" id="sort_by">
-                    <option value="name">Name</option>
-                    <option value="price">Price</option>
-                    <option value="created_at">Date</option>
+                    <option value="name" {{request()->sort_by=='name'?'selected':''}}>Name</option>
+                    <option value="price" {{request()->sort_by=='price'?'selected':''}}>Price</option>
+                    <option value="created_at" {{request()->sort_by=='created_at'?'selected':''}}>Date</option>
                   </select>
                 </form>
                 <form action="" class="aa-show-form">
@@ -212,18 +213,16 @@
             <div class="aa-sidebar-widget">
               <h3>Shop By Color</h3>
               <div class="aa-color-tag">
-                <a class="aa-color-green" href="#"></a>
-                <a class="aa-color-yellow" href="#"></a>
-                <a class="aa-color-pink" href="#"></a>
-                <a class="aa-color-purple" href="#"></a>
-                <a class="aa-color-blue" href="#"></a>
-                <a class="aa-color-orange" href="#"></a>
-                <a class="aa-color-gray" href="#"></a>
-                <a class="aa-color-black" href="#"></a>
-                <a class="aa-color-white" href="#"></a>
-                <a class="aa-color-cyan" href="#"></a>
-                <a class="aa-color-olive" href="#"></a>
-                <a class="aa-color-orchid" href="#"></a>
+                @php
+                foreach($products as $product){
+                  foreach($product->attributes as $attribute){
+                    $color[]=$attribute->color->color;
+                  }
+                }
+                @endphp
+                @foreach(array_unique($color) as $name)
+                  <a href="" class="aa-color-{{$name}} color-data" value="{{$name}}"></a>
+                @endforeach
               </div>                            
             </div>
             <!-- single sidebar -->
@@ -284,6 +283,10 @@
                 </ul>
               </div>                            
             </div>
+
+            <form action="{{route('category',request()->segment(2))}}" id="filter-form">
+              <input type="hidden" value="black" name="color">
+            </form>
           </aside>
         </div>
        
@@ -297,6 +300,11 @@
 <script>
   jQuery('#sort_by').on('change',function(){
     jQuery('.aa-sort-form').submit();
+  });
+
+  jQuery('.color-data').on('click',function(event){
+    event.preventDefault();
+    alert('working');
   })
 </script>
 @endsection
