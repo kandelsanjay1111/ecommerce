@@ -29,7 +29,7 @@ Route::get('/admin-login',[App\Http\Controllers\AdminController::class,'index'])
 Route::post('/admin-auth',[App\Http\Controllers\AdminController::class,'auth'])->name('admin.auth');
 Route::post('/admin-logout',[App\Http\Controllers\AdminController::class,'logout'])->name('admin.logout');
 
-
+//Admin Backend Routes 
 Route::group(['middleware'=>'admin_auth','as'=>'admin.'],function(){
 
     Route::get('/admin/dashboard',[App\Http\Controllers\AdminController::class,'dashboard'])->name('dashboard');

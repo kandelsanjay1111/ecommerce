@@ -17,7 +17,6 @@
      </div>
    </div>
 </section>
-
   <section id="aa-product-category">
     <div class="container">
       <div class="row">
@@ -284,7 +283,7 @@
               </div>                            
             </div>
 
-            <form action="{{route('category',request()->segment(2))}}" id="filter-form">
+            <form action="{{route('category','men')}}" id="filter-form">
               <input type="hidden" value="black" name="color">
             </form>
           </aside>
@@ -305,6 +304,7 @@
   jQuery('.color-data').on('click',function(event){
     event.preventDefault();
     alert('working');
+    jQuery('#filter-form').submit();
   })
 </script>
 @endsection
